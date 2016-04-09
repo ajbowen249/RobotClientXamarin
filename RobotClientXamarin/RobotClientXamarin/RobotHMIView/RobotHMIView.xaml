@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:RobotClientXamarin"
+             x:Class="RobotClientXamarin.RobotHMIView">
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+
+    <Label Text="{Binding Name}" 
+           Grid.Row="0"
+           HorizontalOptions="Center"
+           HorizontalTextAlignment="Center"
+           FontSize="30"/>
+
+    <StackLayout Grid.Row="1" Orientation="Horizontal">
+      <Label Text="Distance to obstacle: " />
+      <Label Text="{Binding DistanceToObstacle.Value}" />
+    </StackLayout>
+    
+    <Grid Grid.Row="2">
+      <Grid.RowDefinitions>
+        <RowDefinition />
+        <RowDefinition />
+        <RowDefinition />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+
+      <Button Text="^" Grid.Row="0" Command="{Binding SetDirectionCommand}" CommandParameter="{x:Static local:RobotDirection.Forward}"/>
+
+      <Grid Grid.Row="1">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition />
+          <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Button Text="&lt;" Grid.Column="0" Command="{Binding SetDirectionCommand}" CommandParameter="{x:Static local:RobotDirection.TurnLeft}"/>
+        <Button Text="&gt;" Grid.Column="1" Command="{Binding SetDirectionCommand}" CommandParameter="{x:Static local:RobotDirection.TurnRight}"/>
+
+      </Grid>
+      
+      <Button Text="v" Grid.Row="2" Command="{Binding SetDirectionCommand}" CommandParameter="{x:Static local:RobotDirection.Backward}"/>
+      <Button Text="Stop" Grid.Row="3" Command="{Binding SetDirectionCommand}" CommandParameter="{x:Static local:RobotDirection.Stop}"/>
+
+    </Grid>
+    
+  </Grid>
+  
+</ContentView>
