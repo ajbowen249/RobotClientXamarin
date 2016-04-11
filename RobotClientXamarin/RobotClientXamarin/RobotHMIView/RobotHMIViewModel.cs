@@ -9,8 +9,15 @@ namespace RobotClientXamarin
 {
     public class RobotHMIViewModel : ViewModelBase
     {
+        private static event EventHandler RefreshGuiTimerElapsed;
+        private static bool VMConnected;
+        private static bool OnRefreshGuiTimerElapsed()
+        {
+            RefreshGuiTimerElapsed?.Invoke(null, null);
+            return VMConnected;
+        }
+
         Robot _robot;
-        bool _unregistered;
 
         public RobotHMIViewModel(Robot robot)
         {
@@ -20,10 +27,17 @@ namespace RobotClientXamarin
                 para => _robot.SetDirection_Async((RobotDirection)para)
             );
 
-            //TODO: This timer is useless. It's entirely synchronous
-            //and I'm not sure how to stop it before this VM gets cleaned up,
-            //which is the sourc of the exception when the app closes
-            Device.StartTimer(Constants.GuiUpdateInterval, UpdateGui);
+            //TODO: This timer pattern is pretty sketchy. Need to use the 
+            //static event to properly clean things up on disconnect.
+            RefreshGuiTimerElapsed += RobotHMIViewModel_RefreshGuiTimerElapsed;
+
+            VMConnected = true;
+            Device.StartTimer(Constants.GuiUpdateInterval, OnRefreshGuiTimerElapsed);
+        }
+
+        private async void RobotHMIViewModel_RefreshGuiTimerElapsed(object sender, EventArgs e)
+        {
+            DistanceToObstacle.Value = await _robot.GetDistanceToObstacle_Async();
         }
 
         public Command SetDirectionCommand { get; private set; }
@@ -31,16 +45,13 @@ namespace RobotClientXamarin
 
         public string Name { get { return _robot.Name; } }
 
-        private bool UpdateGui()
-        {
-            DistanceToObstacle.Value = _robot.GetDistanceToObstacle();
-
-            return !_unregistered;
-        }
-
         public override void UnregisterEvents()
         {
-            _unregistered = true;
+            VMConnected = false;
+            RefreshGuiTimerElapsed -= RobotHMIViewModel_RefreshGuiTimerElapsed;
+            //Allow the timer to be serviced before the socket is closed.
+            //TODO: Find a better way to synchronize all of this.
+            Task.Delay(Constants.GuiUpdateInterval);
         }
     }
 }

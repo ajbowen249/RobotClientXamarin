@@ -51,7 +51,10 @@ namespace RobotClientXamarin.Droid
 
         public void Disconnect()
         {
-            _socket.Close();
+            lock(_ioLock)
+            {
+                _socket.Close();
+            }
         }
 
         public Task<string> Transact_Async(string request)

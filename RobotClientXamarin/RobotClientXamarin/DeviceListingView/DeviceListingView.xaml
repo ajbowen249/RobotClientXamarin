@@ -11,7 +11,7 @@
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
     
-    <Label Text="Select device:" 
+    <Label Text="Select Device:" 
            Grid.Row="0"
            HorizontalOptions="Center" 
            HorizontalTextAlignment="Center" 
