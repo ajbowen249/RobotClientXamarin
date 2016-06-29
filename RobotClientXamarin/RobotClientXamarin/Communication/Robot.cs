@@ -46,9 +46,9 @@ namespace RobotClientXamarin
             await SetProperty_Async(RobotProperty.direction, direction);
         }
 
-        public async Task<string> GetDistanceToObstacle_Async()
+        public string GetDistanceToObstacle()
         {
-            return await GetProperty_Async(RobotProperty.distance);
+            return GetProperty(RobotProperty.distance);
         }
 
         private async Task SetProperty_Async(RobotProperty property, object value)

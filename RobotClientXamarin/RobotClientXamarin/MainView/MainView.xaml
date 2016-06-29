@@ -3,25 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:RobotClientXamarin"
              x:Class="RobotClientXamarin.MainView">
+  
+  <local:VVMControl ViewModel="{Binding ActiveViewModel.Value}" />
 
-  <Grid>
-    <local:VVMControl ViewModel="{Binding ActiveViewModel.Value}" />
-
-    <Grid IsVisible="{Binding Connecting.Value}">
-      <Grid BackgroundColor="#55AAAAAA" />
-      
-      <ContentView BackgroundColor="White" 
-                   VerticalOptions="Center" 
-                   HorizontalOptions="Center" 
-                   Padding="10">
-        
-        <Label Text="Connecting..." 
-               TextColor="Black"
-               FontSize="20"
-               HorizontalOptions="Center"
-               HorizontalTextAlignment="Center"
-               VerticalTextAlignment="Center"/>
-        </ContentView>
-    </Grid>
-  </Grid>
 </ContentPage>
